@@ -23,6 +23,17 @@ public class TowerOfHanoi {
         move(b, moveSize - 1, a, c);
     }
 
+    public static void move(Integer moveSize, String a, String b, String c) {
+        if (1 == moveSize) {
+            System.out.printf("%s --> %s\n", a, c);;
+            return;
+        }
+
+        move(moveSize - 1, a, c, b);
+        System.out.printf("%s --> %s\n", a, c);
+        move(moveSize - 1, b, a, c);
+    }
+
     public static void main(String[] args) {
         Stack<Integer> a = new Stack<>();
         Stack<Integer> b = new Stack<>();
@@ -38,5 +49,8 @@ public class TowerOfHanoi {
         move(a, a.size(), b, c);
 
         System.out.println(c);
+
+        move(3, "A", "B", "C");
+
     }
 }

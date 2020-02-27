@@ -1,5 +1,7 @@
 package com.lucas.algo.kmp;
 
+import com.google.common.collect.Lists;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -18,7 +20,7 @@ public class QuickSort {
         nums.set(b, tmp);
     }
 
-    public static void quickSort(List<Integer> nums, int start, int end) {
+    public static void quickSort3Num(List<Integer> nums, int start, int end) {
 
 
         int left = start - 1;
@@ -39,7 +41,7 @@ public class QuickSort {
         }
     }
 
-    public static void quickSort2(List<Integer> nums, int start, int end) {
+    public static void quickSort2NumOpt(List<Integer> nums, int start, int end) {
         int current = start;
         while (current <= end) {
             if (nums.get(current) == 0) {
@@ -63,12 +65,46 @@ public class QuickSort {
 
         System.out.println(nums);
 
-        quickSort2(nums, 0, nums.size() - 1);
+        quickSort2NumOpt(nums, 0, nums.size() - 1);
 
         System.out.println(nums);
     }
 
+    public static int hoarePartition(List<Integer> nums, int start, int end) {
+        int v = nums.get(end);
+        int pivot = end;
+        --start;
+        while (true) {
+            do {
+                ++start;
+            } while (start < end && nums.get(start) < v);
+
+            do {
+                --end;
+            } while (start < end && nums.get(end) > v); // 采用do...while是为了防止重复元素时，出现死循环，如，10 10 2 10
+
+            if (start < end) {
+                swap(nums, start, end);
+            } else {
+                swap(nums, pivot, start);
+                System.out.println(nums);
+                return start; // 返回end而不是start，原因是end对应的元素一定小于等于pivot元素。而start只有在pivot是末尾元素时可以使用
+            }
+        }
+    }
+
+    public static void quickSort(List<Integer> nums, int start, int end) {
+        if (start < end) {
+            int pivot = hoarePartition(nums, start, end);
+            quickSort(nums, start, pivot - 1);
+            quickSort(nums, pivot + 1, end);
+        }
+    }
     public static void main(String[] args) {
-        dutchFlag();
+//        dutchFlag();
+
+        List<Integer> nums = Lists.newArrayList(10, 5, 3, 1);
+        quickSort(nums, 0, nums.size() - 1);
+        System.out.println(nums);
     }
 }
